@@ -54,6 +54,9 @@ gulp.task('watch', gulp.parallel(function(w){
 	  watch('*.html', function() {
 			browserSync.reload();
 		})
+	  watch('js/*.js', function() {
+			browserSync.reload();
+		})
     w();
 }));
 
