@@ -19,14 +19,22 @@ var list = new Vue({
 	}
 })
 
-
-Vue.component('bbb', {
+Vue.component('cart', {
 	data: function () {
     return {
       summa: 0
     }
   },
-  template: '<button v-on:click="summa++">Нажата {{ summa }} раз!</button>'
+  template: '<div class="cart" v-on:click="summa += 200"><span class="cart__sum">{{ summa }}</span> руб.</div>'
+})
+
+Vue.component('bbb', {
+	data: function () {
+    return {
+      col: 0
+    }
+  },
+  template: '<button v-on:click="col++">Нажата {{ col }} раз!</button>'
 })
 
 Vue.component('list-item', {
