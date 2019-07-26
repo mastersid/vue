@@ -18,6 +18,17 @@ var list = new Vue({
 		]
 	}
 })
+
+
+Vue.component('bbb', {
+	data: function () {
+    return {
+      summa: 0
+    }
+  },
+  template: '<button v-on:click="summa++">Нажата {{ summa }} раз!</button>'
+})
+
 Vue.component('list-item', {
   props: ['list'],
   template: '<li>{{ list.id }} {{ list.title }} <small>{{ list.price }}</small></li>'
