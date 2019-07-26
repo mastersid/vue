@@ -49,8 +49,11 @@ gulp.task('build', gulp.parallel(
 //watch
 gulp.task('watch', gulp.parallel(function(w){
     watch('less/*.less', function(event, cb) {
-        gulp.parallel('style:build','browserSync')();
+        gulp.parallel('style:build')();
     });
+	  watch('*.html', function() {
+			browserSync.reload();
+		})
     w();
 }));
 
@@ -65,4 +68,4 @@ gulp.task('browserSync', function() {
 })
 
 //start
-gulp.task('default', gulp.series('build', 'watch'));
+gulp.task('default', gulp.series('build', 'watch', 'browserSync'));
