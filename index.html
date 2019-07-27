@@ -2,33 +2,37 @@
 <head>
   <meta charset="UTF-8">
   <title>Vue.js</title>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="js/vue.js"></script>
+  <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <h1>Тестовый проект на vue.js</h1>
-  <p id="message" v-bind:title="title">{{ message }}
-  	<span v-if="fill">789789</span>
-  </p>
-  <ul id="list">
-  	<li v-for="service in services">
-  		{{ service.text }}&ensp;<small>{{ service.price }}</small>
-  	</li>
-  </ul>
-  ----------------------------------------------------------
-  <ul id="upsales">
-  	<list-item
-  		v-for="item in list"
-  		v-bind:list="item"
-  		v-bind:key="item.id"
-  	></list-item>
-  	<li>
-  		<bbb></bbb>
-  		<bbb></bbb>
-  		<bbb></bbb>
-  	</li>
-  	<cart></cart>
-  </ul>
+  <div class="example container">
+    <h1>Тестовый проект на vue.js</h1>
+    <h3 v-show="h_show">Привет тебе, {{ fullName }}</h3>
+    <hr>
+    <form action="" class="form-inline">
+      <label for="">Имя</label>
+      <input class="form-control" type="text" v-model="firstName">
+      <label for="">Фамилия</label>
+      <input class="form-control" type="text" v-model="lastName">
+      <button type="button" class="btn btn-success" v-on:click="h_show=!h_show">Показать/скрыть приветствие</button>
+    </form>
+  </div>
 </body>
-<script src="js/vue.js"></script>
+<script>
+  let app = new Vue({
+    el: '.example',
+    data: {
+      firstName: '',
+      lastName: '',
+      h_show: true
+    },
+    computed: {
+      fullName() {
+        return this.lastName+' '+this.firstName;
+      }
+    }
+  })
+</script>
 </html>

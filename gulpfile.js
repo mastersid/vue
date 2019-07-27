@@ -19,7 +19,7 @@ var path = {
     watch: { 
         css:    ['less/*.less']
     },
-    clean: ['css/*.css']
+    clean: ['css/*.css','!css/bootstrap.css']
 };
 
 //css
@@ -48,17 +48,15 @@ gulp.task('build', gulp.parallel(
 
 //watch
 gulp.task('watch', gulp.parallel(function(w){
-    watch('less/*.less', function(event, cb) {
+    gulp.watch('less/*.less', function(event, cb) {
         gulp.parallel('style:build')();
     });
-	  watch('*.html', function() {
-			browserSync.reload();
-		})
-	  watch('js/*.js', function() {
-			browserSync.reload();
-		})
+    gulp.watch(['*.html','js/*.js']).on('change', function() {
+      browserSync.reload();
+    });
     w();
 }));
+
 
 //browser Sync
 
