@@ -1,0 +1,69 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Vue.js</title>
+  <script src="js/vue.js"></script>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <form action="" class="form">
+      <h1>Заполните форму</h1>
+      <div class="form-group">
+        <label for="">Имя</label>
+        <input class="form-control" type="text">
+      </div>
+      <div class="form-group">
+        <label for="">Фамилия</label>
+        <input class="form-control" type="text">
+      </div>
+      <div class="form-group">
+        <label for="">E-mail</label>
+        <input class="form-control" type="email">
+      </div>
+      <div class="form-group">
+        <span>Гость</span>&ensp;<button type="button" class="btn btn-primary"
+          v-on:click="addInputGroup"
+        >+</button>
+      </div>
+      <hr>
+      <div class="form-group"
+        v-for="(guest, index) in guests"
+      >
+        <label for="" v-on:dblclick="removeInputGroup(index)">Гость {{ index+1 }}</label>
+        <input class="form-control" type="text" v-bind:name="'guest'+index">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-success">Отправить</button>
+      </div>
+    </form>
+  </div>
+</body>
+<script>
+  Vue.component('guestinput', {
+    
+  })
+  
+  let app = new Vue({
+    el: '.form',
+    data: {
+      guests: []
+    },
+    methods: {
+      addInputGroup() {
+        return this.guests.push('1');
+      },
+      removeInputGroup(index) {
+        return this.guests.splice(index, 1);;
+      }
+    },
+    computed: {
+
+    }
+  })
+</script>
+
+</html>
