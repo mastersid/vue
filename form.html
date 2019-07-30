@@ -1,69 +1,107 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <title>Vue.js</title>
-  <script src="js/vue.js"></script>
-  <link rel="stylesheet" href="css/bootstrap.css">
-  <link rel="stylesheet" href="css/style.css">
+	<meta charset="UTF-8">
+	<title>Vue.js</title>
+	<script src="js/vue.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-  <div class="container">
-    <form action="" class="form">
-      <h1>Заполните форму</h1>
-      <div class="form-group">
-        <label for="">Имя</label>
-        <input class="form-control" type="text">
-      </div>
-      <div class="form-group">
-        <label for="">Фамилия</label>
-        <input class="form-control" type="text">
-      </div>
-      <div class="form-group">
-        <label for="">E-mail</label>
-        <input class="form-control" type="email">
-      </div>
-      <div class="form-group">
-        <span>Гость</span>&ensp;<button type="button" class="btn btn-primary"
-          v-on:click="addInputGroup"
-        >+</button>
-      </div>
-      <hr>
-      <div class="form-group"
-        v-for="(guest, index) in guests"
-      >
-        <label for="" v-on:dblclick="removeInputGroup(index)">Гость {{ index+1 }}</label>
-        <input class="form-control" type="text" v-bind:name="'guest'+index">
-      </div>
-      <div class="form-group">
-        <button type="submit" class="btn btn-success">Отправить</button>
-      </div>
-    </form>
-  </div>
+	<div class="container">
+		<form action="" class="form" v-on:submit.prevent="showResult=!showResult">
+		  <div class="start" v-show="!showResult">
+				<h1>Заполните форму</h1>
+				<div class="form-group">
+					<label for="">Имя</label>
+					<input class="form-control" type="text" v-model="firstName">
+				</div>
+				<div class="form-group">
+					<label for="">Фамилия</label>
+					<input class="form-control" type="text" v-model="lastName">
+				</div>
+				<div class="form-group">
+					<label for="">E-mail</label>
+					<input class="form-control" type="email" v-model="email">
+				</div>
+				<div class="form-group">
+					<button type="button" class="btn btn-primary" v-on:click="addInputGroup">+ Добавить гостя</button>
+				</div>
+				<hr>
+				<guestinput 
+					v-for="(item, index) in guests"
+					v-bind:key="item.id"
+					v-bind:id="index"
+					v-bind:item="item"
+					v-on:remove="guests.splice(index, 1)"
+		 ></guestinput>
+				<div class="form-group">
+					<button type="submit" class="btn btn-success">Отправить</button>
+				</div>
+			</div>
+			<div class="result" v-show="showResult">
+				<table class="table table-bordered">
+					<tr>
+						<td>Имя:</td>
+						<td>{{ firstName }}</td>
+					</tr>
+					<tr>
+						<td>Фамилия:</td>
+						<td>{{ lastName }}</td>
+					</tr>
+					<tr>
+						<td>Email:</td>
+						<td>{{ email }}</td>
+					</tr>
+					<tr v-for="(field, index) in guests"
+							v-bind:key="field.id"
+							v-bind:field="field"
+					>
+						<td>Гость {{ index+1 }}</td>
+						<td>{{ field.name }}</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+	</div>
 </body>
 <script>
-  Vue.component('guestinput', {
-    
-  })
-  
-  let app = new Vue({
-    el: '.form',
-    data: {
-      guests: []
-    },
-    methods: {
-      addInputGroup() {
-        return this.guests.push('1');
-      },
-      removeInputGroup(index) {
-        return this.guests.splice(index, 1);;
-      }
-    },
-    computed: {
+	Vue.component('guestinput', {
+		props: ['id', 'index', 'item'],
+    template: `
+<div class="form-group">
+	<label for="" v-on:dblclick="$emit('remove')">Гость {{ id+1 }}</label>
+	<input class="form-control" type="text" v-model="item.name">
+</div>
+		`,
+		computed: {
+			
+		}
+	})
 
-    }
-  })
+	let app = new Vue({
+		el: '.form',
+		data: {
+			firstName: '',
+			lastName: '',
+			email: '',
+			guests: [],
+			guestId: 1,
+			showResult: false
+		},
+		methods: {
+			addInputGroup() {
+				this.guests.push({
+					id: this.guestId++,
+					name: ''
+				});
+			}
+		},
+		computed: {
+
+		}
+	})
 </script>
 
 </html>

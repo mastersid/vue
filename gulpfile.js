@@ -50,6 +50,7 @@ gulp.task('build', gulp.parallel(
 gulp.task('watch', gulp.parallel(function(w){
     gulp.watch('less/*.less', function(event, cb) {
         gulp.parallel('style:build')();
+				browserSync.reload();
     });
     gulp.watch(['*.html','js/*.js']).on('change', function() {
       browserSync.reload();
