@@ -1,0 +1,54 @@
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Vue.js</title>
+	<script src="js/vue.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+	<div class="container">
+		<form action="" class="form">
+          <div class="alert"
+               :class="'alert-' + className" role="alert">Это класс - {{ className }}</div>
+		  <div class="radio">
+            <label>
+              <input type="radio" value="info" v-model="className">
+              Info
+            </label>
+          </div>
+		  <div class="radio">
+            <label>
+              <input type="radio" value="success" v-model="className">
+              Success
+            </label>
+          </div>
+		  <div class="radio">
+            <label>
+              <input type="radio" value="warning" v-model="className">
+              Warning
+            </label>
+          </div>
+		</form>
+	</div>
+</body>
+<script>
+
+	let app = new Vue({
+		el: '.form',
+		data: {
+		  className: ''
+		},
+		methods: {
+			
+		},
+		computed: {
+
+		}
+	})
+    
+</script>
+
+</html>
