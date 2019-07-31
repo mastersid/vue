@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form validation</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/fa.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/vue.js"></script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="sample">
+      <form v-on:submit.prevent="send=true" v-if="!send">
+        <div class="progress">
+          <div class="progress-bar" :style="width"></div>
+        </div>
+        <div>
+          <div class="form-group"
+               v-for="(field, index) in info">
+            <label>{{ field.name }} <i class="fas" :class="getClass(index)"></i></label>
+            <input type="text" class="form-control"
+                   :value="field.value"
+                   @input="onInput(index, $event.target.value)"
+                   >
+          </div>
+        </div>
+        <button class="btn btn-primary" :disabled="flag">
+          Send Data
+        </button>
+      </form>
+      <div v-else>
+        <table class="table table-bordered">
+          <tr v-for="(field, index) in info">
+            <td>{{ field.name }}</td>
+            <td>{{ field.value }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: '.sample',
+      data: {
+        info: [{
+            name: 'Name',
+            value: '',
+            pattern: /^[a-zA-Z ]{2,30}$/
+          },
+          {
+            name: 'Phone',
+            value: '',
+            pattern: /^[0-9]{7,14}$/
+          },
+          {
+            name: 'Email',
+            value: '',
+            pattern: /.+/
+          },
+          {
+            name: 'Some Field 1',
+            value: '',
+            pattern: /.+/
+          },
+          {
+            name: 'Some Field 2',
+            value: '',
+            pattern: /.+/
+          }
+        ],
+        controls: [],
+        className: '',
+        flag: false,
+        send: false
+      },
+      beforeMount() {
+        for (let i = 0; i < this.info.length; i++) {
+          this.controls.push({
+            error: !this.info[i].pattern.test(this.info[i].value),
+            activated: this.info[i].value != ''
+          })
+        }
+      },
+      methods: {
+        onInput(index, value) {
+          let inp = this.info[index],
+              control = this.controls[index];
+          inp.value = value;
+          control.error = !inp.pattern.test(value);
+          control.activated = true;
+        },
+        getClass(index) {
+          if (this.controls[index].activated) return !this.controls[index].error ? 'fa-check-circle text-success' : 'fa-times-circle text-danger';
+        }
+      },
+      computed: {
+        width() {
+          let done = 0;
+          for (let i = 0; i < this.controls.length; i++) {
+            done += this.controls[i].error ? 0 : 1;
+            this.flag = !(done == this.controls.length);
+          }
+          return {
+            width: done/this.controls.length*100+'%'
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
