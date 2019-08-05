@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Props</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/fa.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/vue.js"></script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="sample">
+     <div class="btn btn-default" @click="ul = !ul">Toggle</div>
+      <!--app-ul :items="items" v-if="ul"></app-ul>
+      <app-ol :items="items" v-else></app-ol-->
+      <component :is="getComp" :items="items"></component>
+    </div>
+  </div>
+  <script>
+    Vue.component('appUl', {
+      props: {
+        items: null
+      },
+      template: `
+        <ul>
+          <li v-for="item in items">{{ item }}</li>
+        </ul>
+      `
+    })
+    Vue.component('appOl', {
+      props: {
+        items: null
+      },
+      template: `
+        <ol>
+          <li v-for="item in items">{{ item }}</li>
+        </ol>
+      `
+    })
+    
+    let app = new Vue({
+      el: '.sample',
+      data: {
+        items: [
+          'Items',
+          'For',
+          'Some',
+          'List',
+        ],
+        ul: true
+      },
+      computed: {
+        getComp() {
+          return this.ul ? 'appUl' : 'appOl';
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
