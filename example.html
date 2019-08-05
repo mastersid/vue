@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form validation</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/fa.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/vue.js"></script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="sample">
+      <ul>
+      	<li-item v-for="(btn, index) in buttons"
+      		:name="btn.name"
+      		:disabled="btn.disabled"
+      		:key="index"
+      		@fill="myCount(index, $event)"
+      		></li-item>
+      </ul>
+      <hr>
+      <div class="alert alert-success">
+      	<b>Неактивные кнопки: </b> {{ getInactive }}
+      </div>
+    </div>
+  </div>
+  <!-- По клику на кнопку меняется класс, значение кнопки становится disabled, в строку пишутся неактивные кнопки -->
+  <script>
+    Vue.component('li-item', {
+			props: ['name','disabled'],
+			template: `
+				<li>
+					<div class="btn btn-success" :disabled="disabled"
+							 @click="getName">{{ name }}</div>
+				</li>
+			`,
+			methods: {
+				getName(e) {
+					this.$emit('fill', {
+						disabled: true,
+						btnName: e.srcElement.textContent+'5'
+					});
+				}
+			}
+		});
+		
+		let app = new Vue({
+			el: '.sample',
+			data: {
+				buttons: [
+					{
+						name: 'copy',
+						disabled: false
+					},
+					{
+						name: 'paste',
+						disabled: true
+					},
+					{
+						name: 'delete',
+						disabled: false
+					}
+				],
+			},
+			methods: {
+				myCount(index, data) {
+					this.buttons[index].name = data.btnName;
+					this.buttons[index].disabled = data.disabled;
+				}
+			},
+			computed: {
+				getInactive() {
+					let inActive = '';
+					for (let i = 0; i < this.buttons.length; i++) {
+						inActive += this.buttons[i].disabled ? this.buttons[i].name+', ' : '';
+					}
+					return inActive;
+				}
+			}
+		})
+  </script>
+</body>
+
+</html>

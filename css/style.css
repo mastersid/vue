@@ -1,1 +1,1 @@
-.wrapper{padding:15px;max-width:400px;margin:20px auto}.content{max-height:300px;overflow-y:scroll}
+.wrapper{padding:15px;max-width:400px;margin:20px auto}.content{max-height:300px;overflow-y:scroll}.rounded{border-radius:2px;color:#fff;display:inline-block;padding:2px 5px}.error{background:red;color:#fff}.error:before{content:'n'}.correct{background:green}.correct:before{content:'y'}
