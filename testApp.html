@@ -1,0 +1,146 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>TestApp</title>
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/style.css">
+		<script src="js/vue.js"></script>
+		<script src="js/axios.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="sample">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>
+								<div class="checkbox">
+							    <label>
+							      <input type="checkbox">
+							      ({{ sum }})
+							    </label>
+							  </div>
+							</th>
+							<th>Имя и фамилия</th>
+							<th>Телефон</th>
+							<th>Дата</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr 
+							is="appTr"
+							v-for="(item, index) in list"
+							:key="item.id"
+							:name="item.name"
+							:lastname="item.lastname"
+							:date="item.date"
+							:id="item.id"
+							:phone="item.phone"
+							@changecheckbox="onChangeCheckbox(index, $event)"
+							></tr>
+					</tbody>
+				</table>
+			</div>
+			<input type="text" v-model="myname" class="form-control">
+			<input type="text" v-model="mylastname" class="form-control">
+		</div>
+	</body>
+
+<!-- Логика:
+
+Каждая строка - компонент
+При изменении чекбокса - информирует и передает событие с индексом для изменения в общем массиве
+
+в экземпляре:
+Computed: sum (считает кол-во выбранных элементов)
+
+ -->
+	
+	<script>
+
+		Vue.component('appTr', {
+			props: {
+				id: Number,
+				name: String,
+				lastname: String,
+				phone: [Number, String],
+				date: null
+			},
+			data() {
+				return {
+					checked: false,
+					editName: false,
+					editPhone: false
+				}
+			},
+			template: `
+				<tr>
+					<td>
+						<div class="checkbox">
+					    <label>
+					      <input type="checkbox" :name="id"
+					      			 @change="changeCheckbox">
+					    </label>
+					  </div>
+					</td>
+					<td>
+						<span v-if="!editName"
+									
+									>{{ name + ' ' + lastname }}</span>
+						<input v-else
+									 v-model="name"
+									 
+									>
+					</td>
+					<td>{{ phone }}</td>
+					<td>{{ date }}</td>
+				</tr>
+			`,
+			methods: {
+				changeCheckbox() {
+					this.checked = !this.checked;
+					this.$emit('changecheckbox', {
+						checked: this.checked
+					})
+				}
+			}
+		});
+		
+		let app = new Vue({
+			el: '.sample',
+			data: {
+				list: [],
+				sum: 0
+			},
+			beforeMount() {
+				for (let i = 0; i < this.list.length; i++) {
+					this.list[i].push({
+						checked: false
+					})
+				}
+			},
+			created() {
+				this.fetchData();
+			},
+			methods: {
+				fetchData() {
+					axios.get('http://www.filltext.com/?rows=10&name={firstName}&lastname={lastName}&date={date}&phone={phone}&id={index}').then(response => {
+						this.list = response.data;
+					});
+				},
+				onChangeCheckbox(index, data) {
+					this.list[index].checked = data.checked;
+
+					let count = 0;
+					for (let i = 0; i < this.list.length; i++) {
+						!this.list[i].checked ? '' : count++;
+					}
+					this.sum = count;
+				}
+			},
+			computed: {
+				
+			}
+		})
+	</script>
+</html>
