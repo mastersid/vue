@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Component</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/vue.js"></script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="sample">
+    	<div v-if="stage==index"
+    			 v-for="(item, index) in questions"
+    			 :key="index">
+    	<h2>{{ item.question }}</h2>
+    	<hr>
+	    	<form action="" @submit.prevent="stage++">
+	    		<div class="form-group"
+	    				 v-for="(answer) in item.answers">
+	    			<div :class="item.type">
+	    				<label>
+	    					<input :type="item.type"
+	    								 :name="'q'+index"
+	    								 :value="answer"
+	    								 :id="answer"
+	    								 v-model="answers[index].answer"
+	    								 @change="onChange(index, $event)">
+	    					{{ answer }}
+	    				</label>
+	    			</div>
+	    		</div>
+	    		<div class="form-group">
+	    			<button class="btn btn-success" :disabled="!answers[index].activated">Далее</button>
+	    		</div>
+	    	</form>
+	    	<hr>
+    	</div>
+    	<div v-if="stage >= questions.length">
+	    	<h2>Ваш результат</h2>
+	    	<hr>
+	    	<table class="table table-bordered">
+	    		<tr v-for="(item, index) in questions"
+	    			  :key="index"
+	    			  :item="item">
+	    			<td>{{ item.question }}</td>
+	    			<td>{{ answers[index].answer }}</td>
+	    		</tr>
+	    	</table>
+    	</div>
+		</div>
+  </div>
+  <script>
+		let app = new Vue({
+			el: '.sample',
+			data: {
+				questions: [
+					{
+						question: 'Укажите Ваш возраст',
+						answers: [
+							'18-25 лет',
+							'26-35 лет',
+							'36-50 лет',
+						],
+						type: 'radio'
+					},
+					{
+						question: 'Выберите себе хобби',
+						answers: [
+							'рыбалка',
+							'охота',
+							'туризм',
+						],
+						type: 'checkbox'
+					}
+				],
+				answers: [],
+				stage: 0
+			},
+			beforeMount() {
+				for (let i = 0; i < this.questions.length; i++) {
+					this.answers.push({
+						answer: [],
+						activated: false
+					})
+				}
+			},
+			methods: {
+				onChange(index, e) {
+					this.answers[index].activated = (this.answers[index].answer != '');
+				}
+			}
+		})
+  </script>
+</body>
+
+</html>

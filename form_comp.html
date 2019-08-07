@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Form Component</title>
   <link rel="stylesheet" href="css/bootstrap.css">
-  <link rel="stylesheet" href="css/fa.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/vue.js"></script>
 </head>
@@ -14,20 +14,20 @@
 <body>
   <div class="wrapper">
     <div class="sample">
-      <form @submit.prevent="sbmt = !sbmt" v-if="!sbmt">
+      <form v-if="!submited" @submit.prevent="submited = !submited">
         <div class="progress">
           <div class="progress-bar" :style="width"></div>
         </div>
         <app-input
-         v-for="(item, index) in info"
-         :key="index"
-         :name="item.name"
-         :val="item.val"
-         :pattern="item.pattern"
-         @myinput="changeData(index, $event)"
-         ></app-input>
+             v-for="(item, index) in info"
+             :key="index"
+             :name="item.name"
+             :pattern="item.pattern"
+             :val="item.val"
+             @oninput="onMyInput(index, $event)"
+             ></app-input>
         <div class="form-group">
-          <button class="btn btn-primary" :disabled="sum != info.length">
+          <button class="btn btn-primary" :disabled="this.sum != this.controls.length">
             Send Data
           </button>
         </div>
@@ -43,11 +43,11 @@
     </div>
   </div>
   <script>
-    Vue.component('app-input', {
+    Vue.component('appInput', {
       props: ['name', 'val', 'pattern'],
       data() {
         return {
-          activated: this.val != '',
+          activated: this.val != ''
         }
       },
       template: `
@@ -62,15 +62,14 @@
       methods: {
         onMyInput(e) {
           this.activated = true;
-          this.$emit('myinput', {
-            val: e.target.value,
-            valid: !this.pattern.test(e.target.value)
-          });
+          this.$emit('oninput', {
+            value: e.target.value
+          })
         }
       },
       computed: {
         getClass() {
-          return (this.pattern.test(this.val) ? 'fa-check-circle text-success' : 'fa-times-circle text-danger');
+          return !this.pattern.test(this.val) ? 'fa-times-circle text-danger' : 'fa-check-circle text-success';
         }
       }
     })
@@ -80,7 +79,7 @@
       data: {
         info: [{
             name: 'Name',
-            val: '',
+            val: 'Evgeniy',
             pattern: /^[a-zA-Z ]{2,30}$/
           },
           {
@@ -106,7 +105,7 @@
         ],
         controls: [],
         sum: 0,
-        sbmt: false
+        submited: false
       },
       beforeMount() {
         for (let i = 0; i < this.info.length; i++) {
@@ -116,22 +115,22 @@
         }
       },
       methods: {
-        changeData(index, data) {
-          this.info[index].val = data.val;
-          this.controls[index].error = data.valid;
-          
-          let summ = 0;
-          for (let i = 0; i < this.controls.length; i++) {
-            if (!this.controls[i].error) summ++;
-          }
-          this.sum = summ;
+        onMyInput(index, data) {
+          this.info[index].val = data.value;
+          this.controls[index].error = !this.info[index].pattern.test(this.info[index].val);
+          //console.log(data);
         }
-        
       },
       computed: {
         width() {
+          let sum = 0;
+
+          for (let i = 0; i < this.controls.length; i++) {
+            if (!this.controls[i].error) sum++;
+          }
+          this.sum = sum;
           return {
-            width: (this.sum / this.controls.length * 100) + '%'
+            width: (sum / this.controls.length * 100) + '%'
           }
         }
       }
